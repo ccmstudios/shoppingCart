@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Product } from 'src/app/models/product';
+import { MessengerService } from 'src/app/services/messenger.service'
 
 @Component({
   selector: 'app-shopping',
@@ -8,27 +10,27 @@ import { Component, OnInit } from '@angular/core';
 export class ShoppingComponent implements OnInit {
 
 shoppingItems= [
-  {
-    id: 1, productId: 1,qty: 2, price: 200
-  },
-  {
-    id: 2, productId: 2, qty: 3, price: 150
-  },
-  {
-    id: 3, productId: 3, qty: 5, price: 300
-  },
-  {
-    id: 4, productId: 4, qty: 6, price: 100
-  },
+ 
 ]
 
 cartTotal = 0
 
-  constructor() { }
+  constructor(private msg: MessengerService) { }
 
   ngOnInit() {
-    this.shoppingItems.forEach(items => {
-      this.cartTotal += (items.qty * items.price)
+
+    this.msg.getMsg().subscribe((product: Product) => {
+      this.shoppingItems.push({
+        productName: product.name,
+        qty: 1,
+        price: product.price
+      
+      })
+      this.cartTotal=0;
+      this.shoppingItems.forEach(items => {
+        this.cartTotal += (items.qty * items.price)
+      })
+      
     })
   }
 
